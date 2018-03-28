@@ -14,7 +14,7 @@ public class Canvas extends AbstractCommand {
 
 		// set properties for canvas
 		setWidth(width);
-		setHeight(height);
+		setHeight(height+2);
 
 		String canvas = getCanvas();
 
@@ -47,15 +47,15 @@ public class Canvas extends AbstractCommand {
 		return buf.toString();**/
 		
 		
-		shape = new char[height][width];
+		shape = new char[height+2][width];
 		// Draw upper border
 		draw(0, 0, width-1, 0, '-');
 		// Draw left border
-		draw(0, 1, 0, height-1, '|');
+		draw(0, 1, 0, height+1, '|');
 		// Draw right border
-		draw(width-1, 1, width-1, height-1, '|');
+		draw(width-1, 1, width-1, height+1, '|');
 		// Draw lower border
-		draw(0, height-1, width-1, height-1, '-');
+		draw(0, height+1, width-1, height+1, '-');
 		
 		return getShapeAsString();
 	}
@@ -65,7 +65,7 @@ public class Canvas extends AbstractCommand {
 
 		List<String> params = new ArrayList<>();
 		params.add("20");
-		params.add("20");
+		params.add("5");
 
 		canvas.execute(params);
 	}

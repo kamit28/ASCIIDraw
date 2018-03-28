@@ -12,6 +12,25 @@ public abstract class AbstractCommand implements Command {
 	protected char[][] shape;
 
 	/**
+	 * @return the shape
+	 */
+	public char[][] getShape() {
+		return shape;
+	}
+
+	/**
+	 * @param shape
+	 *            the shape to set
+	 */
+	public void setShape(char[][] shape) {
+		this.shape = shape;
+	}
+
+	private static final String OS = System.getProperty("os.name");
+	private static final String LINE_SEPERATOR = System
+			.getProperty("line.separator");
+
+	/**
 	 * @return the width
 	 */
 	public int getWidth() {
@@ -48,8 +67,8 @@ public abstract class AbstractCommand implements Command {
 				shape[i][x1] = drawChar;
 			}
 		} else if (y1 == y2) {
-			// horzontal line
-			Arrays.fill(shape[y1], x1, x2+1, drawChar);
+			// horizontal line
+			Arrays.fill(shape[y1], x1, x2 + 1, drawChar);
 		} else {
 			// we have a slope
 			double slope = (double) (y2 - y1) / (double) (x2 - x1);
@@ -61,37 +80,43 @@ public abstract class AbstractCommand implements Command {
 
 	public String getShapeAsString() {
 		StringBuilder results = new StringBuilder();
-		String separator = "\n";
 
 		for (int i = 0; i < shape.length; ++i) {
-			results.append(shape[i]).append(separator);
+			for (int j = 0; j < shape[i].length; j++) {
+				results.append((shape[i][j]) == 0 ? " " : shape[i][j]);
+			}
+			results.append(LINE_SEPERATOR);
 		}
 		return results.toString();
 	}
 
-	protected void validate(int x1, int y1, int x2, int y2) throws InvalidInputException {
-		if (x1 >= 1 && y1 >= 1 && x2 >= 1 && y2 >= 1 && x1 < width && y1 < height && x2 < width && y2 < height
-				&& x1 <= x2 && y1 <= y2) {
+	protected void validate(int x1, int y1, int x2, int y2)
+			throws InvalidInputException {
+		if (x1 >= 1 && y1 >= 1 && x2 >= 1 && y2 >= 1 && x1 < width
+				&& y1 < height && x2 < width && y2 < height && x1 <= x2
+				&& y1 <= y2) {
 			return;
 		}
-		throw new InvalidInputException("Points are beyond the canvas borders or incorrect co-ordinates");
+		throw new InvalidInputException(
+				"Points are beyond the canvas borders or incorrect co-ordinates");
 	}
 
 	@Override
-	public abstract void execute(List<String> params) throws InvalidInputException;
+	public abstract void execute(List<String> params)
+			throws InvalidInputException;
 
 	protected final void clearConsole() {
 		try {
-			final String os = System.getProperty("os.name");
-
-			if (os.contains("Windows")) {
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			if (OS.contains("Windows")) {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start()
+						.waitFor();
 			} else {
-				Runtime.getRuntime().exec("clear");
+				//Runtime.getRuntime().exec("clear");
+				System.out.print("\033\143");
 			}
 		} catch (final Exception e) {
-			// Handle any exceptions.
+			System.err.println(e.getMessage());
+			System.exit(0);
 		}
 	}
-
 }

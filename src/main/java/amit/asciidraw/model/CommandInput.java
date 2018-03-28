@@ -1,12 +1,23 @@
 package amit.asciidraw.model;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import amit.asciidraw.draw.CommandType;
 
 public class CommandInput {
 	private CommandType command;
 	private List<String> params;
+
+	public CommandInput() {
+	}
+
+	public CommandInput(String input) {
+		String[] tokens = input.split(" ");
+		this.command = CommandType.get(tokens[0].toUpperCase());
+		this.params = new ArrayList<String>();
+		for (int i = 1; i < tokens.length; i++) {
+			this.params.add(tokens[i]);
+		}
+	}
 
 	/**
 	 * @return the command
@@ -84,7 +95,8 @@ public class CommandInput {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CommandInput [command=").append(command).append(", params=").append(params).append("]");
+		builder.append("CommandInput [command=").append(command)
+				.append(", params=").append(params).append("]");
 		return builder.toString();
 	}
 }
