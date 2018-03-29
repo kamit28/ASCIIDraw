@@ -13,8 +13,10 @@ public class Application {
 
 	private AbstractCommand context;
 
+	private final CommandFactory factory = new CommandFactory();
+
 	private final Pattern pattern = Pattern.compile("[a-zA-Z]{1}(\\s\\d+)*(\\s[a-zA-z]{1})?+");
-	
+
 	public static void main(String[] args) {
 		printHelp();
 		Application app = new Application();
@@ -29,6 +31,37 @@ public class Application {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void executeCommnad(final String commandInput) throws InvalidInputException {
+		validateCommand(commandInput);
+		CommandInput input = new CommandInput(commandInput);
+		if (context == null) {
+			if (!(input.getCommand().equals(CommandType.CANVAS) || input.getCommand().equals(CommandType.QUIT))) {
+				throw new InvalidInputException(
+						"Canvas is not available for drawing. First create a canvas with C <width> <height>");
+			} else {
+				context = factory.getCommand(input);
+			}
+		} else {
+			AbstractCommand command = factory.getCommand(input);
+			command.setHeight(context.getHeight());
+			command.setWidth(context.getWidth());
+			command.setShape(context.getShape());
+			context = command;
+		}
+		context.execute(input.getParams());
+	}
+
+	private void validateCommand(String commandInput) throws InvalidInputException {
+		Matcher matcher = pattern.matcher(commandInput);
+		if (!matcher.matches()) {
+			throw new InvalidInputException("Command string is invalid.");
+		}
+		String commandPart = commandInput.substring(0, 1);
+		if (null == CommandType.get(commandPart)) {
+			throw new InvalidInputException("Command " + commandPart + " is not a valid command.");
 		}
 	}
 
@@ -47,27 +80,5 @@ public class Application {
 				+ "|               | behaviour of this is the same as that of the \"bucket fill\" tool in paint|\n"
 				+ "|               | programs.|\n" + "|Q              | Quit|\n";
 		System.out.println(help);
-	}
-
-	private void executeCommnad(String commandInput) throws InvalidInputException {
-		Matcher matcher = pattern.matcher(commandInput);
-		if (!matcher.matches()) {
-			throw new InvalidInputException("Command string is invalid.");
-		}
-		CommandInput input = new CommandInput(commandInput);
-		if (context == null) {
-			if (!(input.getCommand().equals(CommandType.CANVAS) || input.getCommand().equals(CommandType.QUIT))) {
-				throw new InvalidInputException("Canvas is not available for drawing. First create a canvas with C <width> <height>");
-			} else {
-				context = CommandFactory.getCommand(input);
-			}
-		} else {
-			AbstractCommand command = CommandFactory.getCommand(input);
-			command.setHeight(context.getHeight());
-			command.setWidth(context.getWidth());
-			command.setShape(context.getShape());
-			context = command;
-		}
-		context.execute(input.getParams());
 	}
 }

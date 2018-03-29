@@ -11,7 +11,7 @@ import amit.asciidraw.model.CommandInput;
 
 public class CommandFactory {
 
-	public static final AbstractCommand getCommand(CommandInput input) throws InvalidInputException {
+	public final AbstractCommand getCommand(CommandInput input) throws InvalidInputException {
 		switch (input.getCommand()) {
 		case CANVAS:
 			return new Canvas();

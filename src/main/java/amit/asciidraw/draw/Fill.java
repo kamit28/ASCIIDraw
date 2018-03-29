@@ -9,7 +9,7 @@ public class Fill extends AbstractCommand {
 
 	@Override
 	public void execute(List<String> params) throws InvalidInputException {
-		if (params.size() < 3) {
+		if (params.size() < 3 || !validParams(params)) {
 			throw new InvalidInputException(
 					"Fill command requires 3 parameters, " + params.size() + " params provided.");
 		}
@@ -20,6 +20,14 @@ public class Fill extends AbstractCommand {
 		String fill = fill(x, y, fillChar);
 
 		System.out.println(fill);
+	}
+
+	private boolean validParams(List<String> params) {
+		return isInteger(params.get(0)) && isInteger(params.get(1)) && params.get(2).length() == 1;
+	}
+
+	private boolean isInteger(String str) {
+		return str.matches("-?\\d+?");
 	}
 
 	private String fill(int x, int y, char ch) {
@@ -38,6 +46,8 @@ public class Fill extends AbstractCommand {
 		return getShapeAsString();
 	}
 
+	
+	// For local test
 	public static void main(String[] args) throws InvalidInputException {
 		Canvas canvas = new Canvas();
 		List<String> params = new ArrayList<>();
@@ -96,6 +106,5 @@ public class Fill extends AbstractCommand {
 		fill.shape = canvas.shape;
 
 		fill.execute(params);
-
 	}
 }
