@@ -9,6 +9,12 @@ public class Line extends AbstractCommand {
 
 	@Override
 	public void execute(List<String> params) throws InvalidInputException {
+
+		if (params.size() < 4) {
+			throw new InvalidInputException(
+					"Line command requires 4 parameters, " + params.size() + " params provided.");
+		}
+
 		int x1 = Integer.parseInt(params.get(0));
 		int y1 = Integer.parseInt(params.get(1));
 		int x2 = Integer.parseInt(params.get(2));
