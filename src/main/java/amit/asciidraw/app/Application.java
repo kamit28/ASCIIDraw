@@ -4,18 +4,16 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import amit.asciidraw.draw.AbstractCommand;
 import amit.asciidraw.exception.InvalidInputException;
 import amit.asciidraw.model.CommandInput;
 import amit.asciidraw.model.CommandType;
 
 public class Application {
 
-	private AbstractCommand context;
+	private CommandContext commandContext;
 
-	private final CommandFactory factory = new CommandFactory();
-
-	private final Pattern pattern = Pattern.compile("[a-zA-Z]{1}(\\s\\d+)*(\\s[a-zA-z]{1})?+");
+	private final Pattern pattern = Pattern
+			.compile("[a-zA-Z]{1}(\\s\\d+)*(\\s[a-zA-z]{1})?+");
 
 	public static void main(String[] args) {
 		printHelp();
@@ -34,41 +32,44 @@ public class Application {
 		}
 	}
 
-	private void executeCommnad(final String commandInput) throws InvalidInputException {
-		validateCommand(commandInput);
-		CommandInput input = new CommandInput(commandInput);
-		if (context == null) {
-			if (!(input.getCommand().equals(CommandType.CANVAS) || input.getCommand().equals(CommandType.QUIT))) {
+	private void executeCommnad(final String input)
+			throws InvalidInputException {
+		validateCommand(input);
+		CommandInput commandInput = new CommandInput(input);
+		if (commandContext == null) {
+			if (!(commandInput.getCommand().equals(CommandType.CANVAS) || commandInput
+					.getCommand().equals(CommandType.QUIT))) {
 				throw new InvalidInputException(
 						"Canvas is not available for drawing. First create a canvas with C <width> <height>");
 			} else {
-				context = factory.getCommand(input);
+				commandContext = new CommandContext();
 			}
-		} else {
-			AbstractCommand command = factory.getCommand(input);
-			command.setHeight(context.getHeight());
-			command.setWidth(context.getWidth());
-			command.setShape(context.getShape());
-			context = command;
 		}
-		context.execute(input.getParams());
+
+		commandContext.setCommand(commandInput);
+		commandContext.executeCommand(commandInput.getParams());
 	}
 
-	private void validateCommand(String commandInput) throws InvalidInputException {
+	private void validateCommand(String commandInput)
+			throws InvalidInputException {
 		Matcher matcher = pattern.matcher(commandInput);
 		if (!matcher.matches()) {
 			throw new InvalidInputException("Command string is invalid.");
 		}
 		String commandPart = commandInput.substring(0, 1);
 		if (null == CommandType.get(commandPart)) {
-			throw new InvalidInputException("Command " + commandPart + " is not a valid command.");
+			throw new InvalidInputException("Command " + commandPart
+					+ " is not a valid command.");
 		}
 	}
 
 	private static void printHelp() {
-		String help = "The work as follows:\n" + "1. Create a new canvas \n"
-				+ "2. Draw on the canvas by issuing various commands \n" + "3. Quit \n\n\n"
-				+ "|Command 		|Description|\n" + "|----|----|\n"
+		String help = "The work as follows:\n"
+				+ "1. Create a new canvas \n"
+				+ "2. Draw on the canvas by issuing various commands \n"
+				+ "3. Quit \n\n\n"
+				+ "|Command 		|Description|\n"
+				+ "|----|----|\n"
 				+ "|C w h          | Create a new canvas of width w and height h.|\n"
 				+ "|L x1 y1 x2 y2  | Draw a new line from (x1,y1) to (x2,y2). Currently, only|\n"
 				+ "|               | horizontal or vertical lines are supported. Horizontal and vertical lines|\n"
@@ -78,7 +79,8 @@ public class Application {
 				+ "|               | using the 'x' character.|\n"
 				+ "|B x y c        | Fill the entire area connected to (x,y) with \"colour\" c. The|\n"
 				+ "|               | behaviour of this is the same as that of the \"bucket fill\" tool in paint|\n"
-				+ "|               | programs.|\n" + "|Q              | Quit|\n";
+				+ "|               | programs.|\n"
+				+ "|Q              | Quit|\n";
 		System.out.println(help);
 	}
 }
