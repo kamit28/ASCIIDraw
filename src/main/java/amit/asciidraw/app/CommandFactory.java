@@ -12,20 +12,14 @@ import amit.asciidraw.model.CommandInput;
 public class CommandFactory {
 
 	public final AbstractCommand getCommand(CommandInput input) throws InvalidInputException {
-		switch (input.getCommand()) {
-		case CANVAS:
-			return new Canvas();
-		case LINE:
-			return new Line();
-		case RECTANGLE:
-			return new Rectangle();
-		case FILL:
-			return new Fill();
-		case QUIT:
-			return new Quit();
-		default:
-			throw new InvalidInputException("Invalid command!");
-		}
+		var command = switch (input.getCommand()) {
+		case CANVAS -> new Canvas();
+		case LINE -> new Line();
+		case RECTANGLE -> new Rectangle();
+		case FILL -> new Fill();
+		case QUIT -> new Quit();
+		default -> throw new InvalidInputException("Invalid command!");
+		};
+		return command;
 	}
-
 }

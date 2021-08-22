@@ -111,7 +111,6 @@ public abstract class AbstractCommand implements Command {
 				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start()
 						.waitFor();
 			} else {
-				//Runtime.getRuntime().exec("clear");
 				System.out.print("\033\143");
 			}
 		} catch (final Exception e) {

@@ -20,11 +20,6 @@ public class Canvas extends AbstractCommand {
 
 		// set properties for canvas
 		setWidth(width);
-		// setHeight(height+2);
-		//String OS = System.getProperty("os.name");
-		//if (!OS.contains("Windows")) {
-		//	height += 2;
-		//}
 		setHeight(height);
 
 		String canvas = getCanvas();
@@ -37,19 +32,6 @@ public class Canvas extends AbstractCommand {
 	}
 
 	private String getCanvas() {
-		/**
-		 * StringBuilder buf = new StringBuilder(); char[] chars = new char[width]; //
-		 * Draw upper border Arrays.fill(chars, '-'); buf.append(chars);
-		 * buf.append("\n");
-		 * 
-		 * // Draw left and right border Arrays.fill(chars, 0, width, ' '); for (int i =
-		 * 0; i < height; i++) { buf.append('|').append(String.valueOf(chars, 0, width -
-		 * 2)).append('|').append("\n"); } // Draw lower border Arrays.fill(chars, '-');
-		 * buf.append(chars); buf.append("\n");
-		 * 
-		 * return buf.toString();
-		 **/
-
 		shape = new char[height + 2][width];
 		// Draw upper border
 		draw(0, 0, width - 1, 0, '-');
@@ -63,6 +45,7 @@ public class Canvas extends AbstractCommand {
 		return getShapeAsString();
 	}
 
+	// local test
 	public static void main(String[] args) throws InvalidInputException {
 		Canvas canvas = new Canvas();
 

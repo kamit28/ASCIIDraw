@@ -1,12 +1,14 @@
 package amit.asciidraw.draw;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import amit.asciidraw.exception.InvalidInputException;
 
@@ -35,9 +37,9 @@ public class RectangleTest {
 
 		rect.execute(params);
 
-		assertTrue(canvas.shape != null);
-		assertTrue(canvas.height == 5);
-		assertTrue(canvas.width == 6);
+		assertNotNull(canvas.shape);
+		assertEquals(5, canvas.height);
+		assertEquals(6, canvas.width);
 
 		char[][] expected = { { '-', '-', '-', '-', '-', '-' }, { '|', 'x', 'x', 'x', 'x', '|' },
 				{ '|', 'x', 0, 0, 'x', '|' }, { '|', 'x', 0, 0, 'x', '|' }, { '|', 'x', 'x', 'x', 'x', '|' },
@@ -46,7 +48,7 @@ public class RectangleTest {
 		assertEquals(Arrays.deepToString(rect.shape), Arrays.deepToString(expected));
 	}
 
-	@Test(expected = InvalidInputException.class)
+	@Test
 	public void testExecuteWhenInSufficientParams() throws InvalidInputException {
 		Rectangle rect = new Rectangle();
 		List<String> params = new ArrayList<>();
@@ -55,10 +57,12 @@ public class RectangleTest {
 		params.add("1");
 		params.add("4");
 
-		rect.execute(params);
+		assertThrows(InvalidInputException.class, () -> {
+			rect.execute(params);
+		});
 	}
 
-	@Test(expected = InvalidInputException.class)
+	@Test
 	public void testExecuteWhenCoordinatedOutOfCanvas() throws InvalidInputException {
 		Canvas canvas = new Canvas();
 		List<String> params = new ArrayList<>();
@@ -68,17 +72,19 @@ public class RectangleTest {
 		canvas.execute(params);
 
 		Rectangle rect = new Rectangle();
-		params = new ArrayList<>();
+		List<String> rectParams = new ArrayList<>();
 
-		params.add("1");
-		params.add("1");
-		params.add("4");
-		params.add("5");
+		rectParams.add("1");
+		rectParams.add("1");
+		rectParams.add("4");
+		rectParams.add("5");
 
 		rect.setHeight(canvas.height);
 		rect.setWidth(canvas.width);
 		rect.shape = canvas.shape;
 
-		rect.execute(params);
+		assertThrows(InvalidInputException.class, () -> {
+			rect.execute(rectParams);
+		});
 	}
 }

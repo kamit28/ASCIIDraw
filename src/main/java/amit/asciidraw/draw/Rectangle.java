@@ -12,7 +12,7 @@ public class Rectangle extends AbstractCommand {
 
 		if (params.size() < 4) {
 			throw new InvalidInputException(
-					"Rectangle command requires 4 parameters, " + params.size() + " params provided.");
+					String.format("Rectangle command requires 4 parameters, {} params provided.", params.size()));
 		}
 
 		int x1 = Integer.parseInt(params.get(0));
@@ -38,6 +38,7 @@ public class Rectangle extends AbstractCommand {
 		return getShapeAsString();
 	}
 
+	// Local test.
 	public static void main(String[] args) throws InvalidInputException {
 		Canvas canvas = new Canvas();
 		List<String> params = new ArrayList<>();

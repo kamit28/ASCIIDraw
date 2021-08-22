@@ -17,7 +17,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		printHelp();
-		Application app = new Application();
+		var app = new Application();
 		try (Scanner scanner = new Scanner(System.in)) {
 			while (true) {
 				try {
